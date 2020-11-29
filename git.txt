@@ -30,3 +30,10 @@ git checkout dz - переход в ветку
 
 
 git checkout -b dz - создание и переход в новую ветку
+
+
+Обьединить ветки 
+git merge dz (при этом мы были в ветке master)
+
+Удалить ветку 
+git branch -D dz
