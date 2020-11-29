@@ -1,0 +1,13 @@
+Глобальные данные 1 раз в самом начале 
+git config --global user.name "Maxym Rodziyevsky"
+git config --global user.email "Rodziyevsky@gmail.com"
+
+
+Инициализация git
+git init
+
+Статус 
+git status
+
+Добавить новый файлы 
+git add. 
