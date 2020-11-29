@@ -9,5 +9,14 @@ git init
 Статус 
 git status
 
-Добавить новый файлы 
-git add. 
+Добавить новый файлы  (все)
+git add . 
+
+
+Коммит (фиксация изменений)
+git commit -m "First commit"
+
+
+Логи (все комииты )
+git log 
+git log --pretty=oneline
