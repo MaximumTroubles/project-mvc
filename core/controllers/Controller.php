@@ -2,11 +2,12 @@
 
 namespace Core\Controllers;
 
+
 class Controller
 {
-    public function __construct()
+    
+    public function dump($obj)
     {
-        // echo __METHOD__;
-        
+        echo '<pre>' . print_r($obj, true) . '</pre>';
     }
 }

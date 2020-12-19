@@ -1,6 +1,6 @@
 Глобальные данные 1 раз в самом начале 
 git config --global user.name "Maxym"
-git config --global user.email "Rodziyevsky@gmail.com"
+git config --global user.email "Rodziyevsky2@gmail.com"
 
 
 Инициализация git

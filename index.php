@@ -1,6 +1,8 @@
 <?php
 
+
 use Core\Libs\Route;
+use Core\File\File;
 
 spl_autoload_register(function ($class_name) {
     // echo $class_name;
@@ -11,7 +13,3 @@ Route::start();
 
 
 
-// require 'core/dz/File.php';
-// require 'core/dz/interface.php';
-// $c = new File('file.txt');
-// var_dump($c);
