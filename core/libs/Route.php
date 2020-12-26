@@ -3,7 +3,7 @@
 namespace Core\Libs;
 
 use Core\Controllers\MainControllers;
-
+use Core\Libs\Exceptions\NotFoundException;
 use Core\Views\View;
 
 class Route
@@ -50,7 +50,8 @@ class Route
                 echo 'File not found';
             }
         } else {
-            View::render('errors/404', [], 404);
+            throw new NotFoundException();
+            
         }
     }
 

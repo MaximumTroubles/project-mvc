@@ -1,0 +1,237 @@
+Язык стркутурировых запросов SQL.
+login: root  password : root
+
+Создание таблицы
+--------------------------------------
+CREATE TABLE cars(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    marka VARCHAR(32) NOT NULL,
+    year INT,
+    color VARCHAR(32) DEFAULT 'black'
+)
+
+Удаляет таблицы:
+DROP TABLE cars
+
+Добавление столбцов:
+ALTER TABLE users ADD password VARCHAR(100) NOT NULL AFTER email
+
+Удаление столбцов:
+ALTER TABLE users DROP about
+
+
+Добавление строк в таблицу (обязательно указыватить все столбцы):
+INSERT INTO users VALUES(1, 'Vasya', 'vasya@gamil.com', '1234', 'm', NULL)
+
+Добавление строк в таблицу(Перечесляем те столбцы которые нужно обязательно запролить)(После названия таблицы)
+INSERT INTO users(name,email,password,gender) VALUES('Masha', 'masha@gamil.com', '1234', 'f')
+
+Удаляет ВСЕ строки из таблицы: (но нумерация id отсаеться)
+DELETE FROM cars
+
+Удаление конкретную строку (оставляет за стобой id)
+DELETE FROM cars WHERE id=2
+C условаями:
+DELETE FROM cars WHERE year>= 2012
+DELETE FROM cars WHERE year>= 2012 AND year<=2015
+DELETE FROM cars WHERE year>= 2012 OR year<=2015
+DELETE FROM cars WHERE year IS NULL
+DELETE FROM cars WHERE year IS NOT NULL - Удаляетстроку если значение столбца(year) не являеться пустым
+
+
+Очищает все строки id обнуляет
+TRUNCATE cars
+
+Обновление данных 
+---------------------
+UPDATE books SET new=1, price=10 WHERE id=1
+
+Добавили 10% к всем ценам в таблице
+UPDATE books 
+SET price=price+price*0.1
+
+
+
+Выбор:
+---------------
+SELECT * FROM books  - выбрать ВСЕ 
+SELECT * FROM books WHERE price BETWEEN 10 AND 20 - 10 20 включительно
+SELECT * FROM books WHERE izd IN('Питер','Вильямс','ДЭСС')
+SELECT name,izd,price FROM books WHERE izd IN('Питер','Вильямс','ДЭСС')
+SELECT name AS book,price FROM books WHERE izd IN('Питер','Вильямс','ДЭСС') (name AS book - так можно задать псевдоним для столбца)
+
+Выбор + сортировка от меньшего к большему
+
+ASC от меньшего к большему (по умолчанию) от А до Я
+SELECT name AS book,price FROM books WHERE izd IN('Питер','Вильямс','ДЭСС') ORDER BY  price 
+
+DESK от большего к меньшему от Я до А 
+SELECT name AS book,price FROM books WHERE izd IN('Питер','Вильямс','ДЭСС') ORDER BY  price DESC
+
+
+SELECT name, category,themes FROM books 
+ORDER BY category, themes
+
+Функция trim() убирает проблемы 
+SELECT trim(name) AS name, price FROM books ORDER BY 1
+
+Удаление повторяющихся строк
+SELECT DISTINCT category FROM books
+SELECT DISTINCT category,themes FROM books ORDER BY 1,2
+
+
+Поиск по не польным данным
+SELECT name, price FROM books
+WHERE name LIKE '%HTML%' - регулярное выражение % - все сииволы до слова и все символы полсе него(любое количесиво любых символов)
+
+SELECT name, price FROM books
+WHERE name NOT LIKE '%HTML%' - все запросы в которых нету запрашуемого слова
+
+RLIKE - регулярное выражение
+
+SELECT name, price FROM books
+WHERE name RLIKE '[0-9]{4}' - должны быть в строке 4 цыфры от 0 до 9 
+
+
+Агрегирующие функции
+----------------------------
+MIN MAX SUM AVG COUNT
+
+Пишуться в SELECT  Возвращает данные одного столбца.
+COUNT(*) - количество всех строк 
+COUNT(имя_столбца) - количество всех строк, содержащих не NULL значение 
+
+Общее кол-во книг и кол-во изданных книг
+SELECT COUNT(*) AS total, COUNT(dateizd) AS dateizd FROM books
+total - 767
+dateizd -  573
+
+
+SELECT MIN(price) AS min, MAX(price) AS max, AVG(price) as avg, SUM(price) AS sum, COUNT(*) 
+FROM books
+
+
+Группировка строк GROUP BY
+-----------------------------
+SELECT category,themes FROM books 
+GROUP BY category,themes
+ORDER BY 1,2
+
+Выьрали издательство и вывели сколько у них книг с большего к меньшему
+SELECT izd, COUNT(*)
+FROM books
+GROUP BY izd
+ORDER BY 2 DESC
+
+
+Количество выбираемых строк LIMIT
+Получим топ 3 издательство по количеству книг
+
+SELECT izd, COUNT(*)
+FROM books
+GROUP BY izd
+ORDER BY 2 DESC
+LIMIT 0, 3  - c какой строки и сколько нам надо выбрать
+
+Средняя стоимость по категориям издательство DiaSOft
+SELECT category,izd, AVG(price) AS avg
+FROM books
+WHERE izd = 'DiaSoft'
+GROUP BY category
+ORDER BY 2
+
+
+HAVING  - накладывает условие на группы строк 
+--------------------------
+Средняя стоимость по категориям издательство DiaSOft у которых Средняя выше 50 и не равно категории SQL
+
+SELECT category,izd, AVG(price) AS avg
+FROM books
+WHERE izd = 'DiaSoft'
+GROUP BY category
+HAVING AVG(price) > 50 AND category != 'SQL'
+ORDER BY 2
+
+
+
+
+Подзапросы
+---------------------
+SELECT name, price
+FROM books
+ORDER BY 2
+LIMIT 0,1
+
+$min = SELECT MIN(price ) FROM books - находим минимальную стоисомть книги 
+SELECT name FROM books WHERE price = $min
+
+SELECT name,price FROM books WHERE price = (SELECT MIN(price ) FROM books)
+
+
+
+
+Получить  книги у которых тираж такоей же как у книги с id=2
+SELECT name, pressrun FROM books WHERE pressrun = (SELECT pressrun FROM books WHERE id=2)
+
+
+Получить  книги у которых кол-во страниц такой же как у книги с id=2 и id=3
+Сами книги не выводить с ид 2 и ид 3.
+
+SELECT name,npages FROM books WHERE npages IN (SELECT npages FROM books WHERE id=2 OR id=3)
+SELECT id,name,npages FROM books WHERE npages IN (SELECT npages FROM books WHERE id=2 OR id=3) AND  id NOT IN(2,3)
+
+
+IN - принадлежит множеству 
+npages IN(3000,4000) по другому это npages 3000 OR npages = 4000
+
+
+
+Многотабличные запросы
+----------------------------
+
+
+
+Указываем свзять между стобцами таблиц
+----------------
+
+ALTER TABLE `products` ADD FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+Выбрать название товара и его категорию
+SELECT products.name,categories.name
+FROM products,categories - не правильно (декартово произведение) т.к получаем все категории и все товары
+
+
+Всегда необходимо указывать условие связи  между таблицами
+A.foregin_key = B.primary_key
+
+Не коректное использование  - WHERE работает на  каждую строку в декартовой таблице 
+SELECT products.name,categories.name
+FROM products,categories
+WHERE products.category_id = categories.id
+
+
+Обьедининие таблиц INNER JOIN 
+-------------------------------
+SELECT products.name,categories.name
+FROM products INNER JOIN categories ON products.category_id = categories.id
+
+Так же но с псевдоименями
+SELECT p.name AS product,c.name AS category
+FROM products AS p  INNER JOIN categories AS c ON p.category_id = c.id
+
+
+
+
+
+
+Library 
+------------------
+SELECT books.name AS name, themes.NAME AS theme, categories.NAME AS category,
+CONCAT(authors.FirstName, ' ', authors.LastName) AS author
+FROM ((books INNER JOIN themes ON books.Id_Themes = themes.ID) INNER JOIN categories ON books.Id_Category = categories.Id) INNER JOIN authors ON books.Id_Author = authors.Id
+
+
+
+
+SELECT products.name , categories.name FROM products LEFT OUTER JOIN categories ON products.category_id = categories.id

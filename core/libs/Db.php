@@ -2,6 +2,7 @@
 
 namespace Core\Libs;
 
+use Core\Libs\Exceptions\DbException;
 use PDO;
 
 class Db
@@ -12,7 +13,12 @@ class Db
     private function __construct()
     {
         $options = (require_once __DIR__ . '/../config.php')['db'];
-        $this->pdo = new \PDO('mysql:host=' . $options['host'] . ';dbname=' . $options['dbname'], $options['user'], $options['password']);
+
+        try {
+            $this->pdo = new \PDO('mysql:host=' . $options['host'] . ';dbname=' . $options['dbname'], $options['user'], $options['password']);
+        } catch (\PDOException $e) {
+            throw new DbException('Ошибка при подключение к базе данных ' . $e->getMessage());
+        }
 
         //? обратный слешь ищет класс без неймспейсов 
     }
