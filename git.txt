@@ -1,51 +1,76 @@
+Если в системе нету git нужно его скачать по сылке и установить, главное что б он лежал на диске C:\\Program Files\\Git
+https://git-scm.com/
+Далие надо его подключить в тернимал редактора кода файл настройки находиться:
+File>Preferences>Settings или crtl + , (русская Б на ) и там в поске пишем terminal.integrated.shell и выбираем Edit in Settings.json для  винводс 
+А для двух путей прописываем путь к git bash: (как в примере)
+    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "git.path": "C:\\Program Files\\Git\\bin\\git.exe",
+
+Для того что б убедиться что git работает, запрашуем версию:
+git --version 
+Обновляем:
+git update-git-for-windows
+
+
 Глобальные данные 1 раз в самом начале 
 git config --global user.name "Maxym"
 git config --global user.email "Rodziyevsky2@gmail.com"
 
 
-Инициализация git
+Инициализация git (Создаем пустой репозиторий, создаеться систеная папка в корне проекта)
 git init
 
-Статус 
+Проверяем на какой ветке, какие файлы видит но не добавлены (U) untrucked, какие мы комиты(подтверждение) сделали 
 git status
 
-Добавить новый файлы  (все)
-git add . 
+Добовляет новый файлы в git, и они становяться (А) added, но не на сам github еще:
+git add
+Если мы хотим все сразу достаточно поставить .
+git add .
+А если хотим по отдельности, то просто указываем имя файла через пробел:
+git add index.php 
 
 
-Коммит (фиксация изменений)
+Создаем уже коммит(делаем снимок работы или фиксация изменений) и указываем имя комиита, это наша первая точка к которой можно вернуться 
 git commit -m "First commit"
 
 
-Логи (все комииты )
+Показывает какие есть коммиты и ихние индификаторы(длинный код), время коммитов , автора коммита, ветку 
 git log 
+Показывает какие есть коммиты и ихние индификаторы(длинный код), ветку и названия -  в одну линию 
 git log --pretty=oneline
 
+
 Просмтореть какие изменения были в  комите
-git show (id commita)
-
-Добавление ветки
-git branch dz
-git checkout dz - переход в ветку
+git show id commita
+Выйти из режима просмотра коммита - Q
 
 
-git checkout -b dz - создание и переход в новую ветку
+Создание новой ветки проекта: 
+git branch имя ветки
+git checkout имя ветки - переключаем ветки
+Но, есть удобная команда которая и создает ветку и сразу в нее переходит:
+git checkout -b имя ветки
 
+После того как мы воздали новую ветку, поработали в ней нам все подходит и мы решили что это годный оддон, тогда переходим в ветку master
+git checkout master
+И добовляем ветку к основе проекта (Обьединение)
+git merge имя ветки 
+Если вдруг оддон был не годный тогда Удаляем ветку:
+git branch -D имя ветки
 
-Обьединить ветки 
-git merge dz (при этом мы были в ветке master)
+Тут мы уже будет заливать на GitHub на проект, для этого нужно создать новый репозиторий ручками на сайте https://github.com/
+Придумать название, описание и тд.
+Перед тем как заливать нужно перейти на основую ветку master
+git checkout master
+После тогда как нажемем на кнопку создать, на странице появиться команды которые дадут доступ к  репозиторию на сайте и уже тут мы их пропишем в терминале
+git remote add origin git@github.com:MaximumTroubles/Laravel-Project-Academy.git
+Соеденили и теперь заливаем на сайт (пушем)
+git push -u origin master
 
-Удалить ветку 
-git branch -D dz
-
-
-create a new repository on the command line
-
-
-echo "# project-mvc" >> README.md
+Для выгрузки проекта из GitHub нужно зайти на репозиторий, нажать на зеленую кнопку Code и в разделе HTTPS скопировать строку
+https://github.com/MaximumTroubles/Laravel-Project-Academy.git
+Создать папку куда будеть загружать, пишем уставноку
 git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin git@github.com:MaximumTroubles/project-mvc.git
-git push -u origin main
+И прописываем команду:
+git pull https://github.com/MaximumTroubles/Laravel-Project-Academy.git
